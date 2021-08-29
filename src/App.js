@@ -7,8 +7,7 @@ import Globe from 'react-globe.gl';
 import * as d3 from "d3";
 
 
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100vh",
@@ -18,21 +17,19 @@ const containerStyle = {
 
 const center = {
   lat: 42.360081,
-  lng: -71.058884
+  lng: -71.058884,
 };
 
 function CollectionList(props) {
   const stuff = props.collectionList.map((obj) => (
-    <div className="collectionContainer">
-      <img
-        className="collectionImage"
-        src={obj.image_url}
-        key={obj.slug}
-        alt={obj.name}
-      />
-    </div>
+    <img
+      className="collectionImage"
+      src={obj.image_url}
+      key={obj.slug}
+      alt={obj.name}
+    />
   ));
-  return <div>{stuff}</div>;
+  return <div className="collectionsContainer">{stuff}</div>;
 }
 
 function App() {
@@ -70,7 +67,7 @@ function App() {
       const signer = provider.getSigner();
       let userAddress = await signer.getAddress();
 
-      apiService.createAccount(userAddress)
+      apiService.createAccount(userAddress);
 
       setUserAddress(userAddress);
       try {
@@ -105,12 +102,26 @@ function App() {
   const weightColor = d3.scaleSequentialSqrt(d3.interpolateYlOrRd)
       .domain([0, 1e7]);
 
-
   return (
     <div className="App">
-      <header className="App-header">{userAddress}</header>
+      <div className="navbar">
+        <button onclick={() => alert(1)} className="walletConnectButton">
+          WALLET CONNECT
+        </button>
+      </div>
+      <header className="App-header">
+        <div className="searchDiv">
+          <input
+            className="searchBar"
+            type="text"
+            placeholder="eg. Los Angeles, CA"
+          />
+          <input className="searchButton" type="submit" />
+        </div>
+      </header>
+
       <div className="pageBody">
-        <aside>
+        <aside className="collections">
           <CollectionList collectionList={collectionList} />
         </aside>
         <article>

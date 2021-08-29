@@ -32,8 +32,8 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-}e
-.article {
+}
+e .article {
   width: auto;
 }
 aside .sidebar {
@@ -48,7 +48,6 @@ aside .sidebar {
   overflow-x: hidden;
 }
 
-
 .App-link {
   color: #61dafb;
 }
@@ -60,4 +59,15 @@ aside .sidebar {
   to {
     transform: rotate(360deg);
   }
+}
+
+.collectionContainer {
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+}
+
+.collectionImage {
+  height: 100px;
+  width: 100px;
 }

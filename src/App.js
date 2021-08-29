@@ -2,8 +2,9 @@ import "./App.css";
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
+import apiService from "./utils/apiService";
 
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100vh",
@@ -12,8 +13,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: -3.745,
-  lng: -38.523,
+  lat: 42.360081,
+  lng: -71.058884,
 };
 
 function CollectionList(props) {
@@ -62,6 +63,9 @@ function App() {
       // For this, we need the account signer...
       const signer = provider.getSigner();
       let userAddress = await signer.getAddress();
+
+      apiService.createAccount(userAddress);
+
       setUserAddress(userAddress);
       try {
         const osApiUrl = `https://api.opensea.io/api/v1/collections?asset_owner=${userAddress}&format=json&limit=300&offset=0`;

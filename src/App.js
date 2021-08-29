@@ -52,35 +52,36 @@ function App() {
   const [userAddress, setUserAddress] = useState("");
   const [collectionList, setCollectionList] = useState([]);
 
-  useEffect(() => {
-    const web3 = async () => {
-      // If you don't specify a //url//, Ethers connects to the default
-      // (i.e. ``http:/\/localhost:8545``)
-      const provider = new ethers.providers.Web3Provider(
+  const web3 = async () => {
+    // If you don't specify a //url//, Ethers connects to the default
+    // (i.e. ``http:/\/localhost:8545``)
+    const provider = new ethers.providers.Web3Provider(
         window.ethereum,
         "any"
-      );
-      await provider.send("eth_requestAccounts", []);
-      // The provider also allows signing transactions to
-      // send ether and pay to change state within the blockchain.
-      // For this, we need the account signer...
-      const signer = provider.getSigner();
-      let userAddress = await signer.getAddress();
+    );
+    await provider.send("eth_requestAccounts", []);
+    // The provider also allows signing transactions to
+    // send ether and pay to change state within the blockchain.
+    // For this, we need the account signer...
+    const signer = provider.getSigner();
+    let userAddress = await signer.getAddress();
 
-      apiService.createAccount(userAddress);
+    apiService.createAccount(userAddress);
 
-      setUserAddress(userAddress);
-      try {
-        const osApiUrl = `https://api.opensea.io/api/v1/collections?asset_owner=${userAddress}&format=json&limit=300&offset=0`;
-        axios.get(osApiUrl).then((res) => {
-          let collectionList = res.data;
-          setCollectionList(collectionList);
-          console.log(collectionList);
-        });
-      } catch (error) {
-        throw error;
-      }
-    };
+    setUserAddress(userAddress);
+    try {
+      const osApiUrl = `https://api.opensea.io/api/v1/collections?asset_owner=${userAddress}&format=json&limit=300&offset=0`;
+      axios.get(osApiUrl).then((res) => {
+        let collectionList = res.data;
+        setCollectionList(collectionList);
+        console.log(collectionList);
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  useEffect(() => {
     web3();
   }, []);
   const globeEl = useRef();
@@ -105,7 +106,7 @@ function App() {
   return (
     <div className="App">
       <div className="navbar">
-        <button onclick={() => alert(1)} className="walletConnectButton">
+        <button onClick={() => web3()} className="walletConnectButton">
           WALLET CONNECT
         </button>
       </div>

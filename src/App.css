@@ -102,6 +102,19 @@ aside .collections {
   border: 0px;
   cursor: pointer;
 }
+.walletConnectedButton {
+  display: "flex";
+  float: right;
+  margin-right: 32px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  width: 205px;
+  height: 47px;
+  border-radius: 24px;
+  border: 0px;
+  cursor: pointer;
+}
 
 .searchDiv {
   /*display: "flex";*/

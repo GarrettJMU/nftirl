@@ -3,9 +3,8 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import apiService from "./utils/apiService";
-import Globe from 'react-globe.gl';
+import Globe from "react-globe.gl";
 import * as d3 from "d3";
-
 
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
@@ -19,6 +18,20 @@ const center = {
   lat: 42.360081,
   lng: -71.058884,
 };
+
+function WalletConnectButton(props) {
+  if (props.userAddress == "")
+    return (
+      <button onClick={() => props.web3()} className="walletConnectButton">
+        WALLET CONNECT
+      </button>
+    );
+  return (
+    <button className="walletConnectedButton">
+      Connected: {props.userAddress.substring(0, 7)}...
+    </button>
+  );
+}
 
 function CollectionList(props) {
   const stuff = props.collectionList.map((obj) => (
@@ -55,10 +68,7 @@ function App() {
   const web3 = async () => {
     // If you don't specify a //url//, Ethers connects to the default
     // (i.e. ``http:/\/localhost:8545``)
-    const provider = new ethers.providers.Web3Provider(
-        window.ethereum,
-        "any"
-    );
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
     // The provider also allows signing transactions to
     // send ether and pay to change state within the blockchain.
@@ -81,34 +91,40 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    web3();
-  }, []);
+  // useEffect(() => {
+  //   web3();
+  // }, []);
   const globeEl = useRef();
   const [popData, setPopData] = useState([]);
 
   useEffect(() => {
     // load data
-    fetch('/world_population.csv').then(res => res.text())
-        .then(csv => d3.csvParse(csv, ({ lat, lng, pop }) => ({ lat: +lat, lng: +lng, pop: +pop })))
-        .then(setPopData);
+    // fetch("/world_population.csv")
+    //   .then((res) => res.text())
+    //   .then((csv) =>
+    //     d3.csvParse(csv, ({ lat, lng, pop }) => ({
+    //       lat: +lat,
+    //       lng: +lng,
+    //       pop: +pop,
+    //     }))
+    //   )
+    //   .then(setPopData);
   }, []);
 
   useEffect(() => {
     // Auto-rotate
-    globeEl.current.controls().autoRotate = true;
-    globeEl.current.controls().autoRotateSpeed = 0.1;
+    // globeEl.current.controls().autoRotate = true;
+    // globeEl.current.controls().autoRotateSpeed = 0.1;
   }, []);
 
-  const weightColor = d3.scaleSequentialSqrt(d3.interpolateYlOrRd)
-      .domain([0, 1e7]);
+  const weightColor = d3
+    .scaleSequentialSqrt(d3.interpolateYlOrRd)
+    .domain([0, 1e7]);
 
   return (
     <div className="App">
       <div className="navbar">
-        <button onClick={() => web3()} className="walletConnectButton">
-          WALLET CONNECT
-        </button>
+        <WalletConnectButton web3={web3} userAddress={userAddress} />
       </div>
       <header className="App-header">
         <div className="searchDiv">
@@ -126,22 +142,21 @@ function App() {
           <CollectionList collectionList={collectionList} />
         </aside>
         <article>
-                <Globe
-                    ref={globeEl}
-                    globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-                    bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-                    backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-                    hexBinPointsData={popData}
-                    hexBinPointWeight="pop"
-                    hexAltitude={d => d.sumWeight * 6e-8}
-                    hexBinResolution={4}
-                    hexTopColor={d => weightColor(d.sumWeight)}
-                    hexSideColor={d => weightColor(d.sumWeight)}
-                    hexBinMerge={true}
-                    enablePointerInteraction={false}
-                />
+          <Globe
+            ref={globeEl}
+            globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+            bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+            backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+            hexBinPointsData={popData}
+            hexBinPointWeight="pop"
+            hexAltitude={(d) => d.sumWeight * 6e-8}
+            hexBinResolution={4}
+            hexTopColor={(d) => weightColor(d.sumWeight)}
+            hexSideColor={(d) => weightColor(d.sumWeight)}
+            hexBinMerge={true}
+            enablePointerInteraction={false}
+          />
         </article>
-        <aside>discord side</aside>
       </div>
 
       <p></p>

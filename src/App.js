@@ -1,36 +1,52 @@
-import logo from "./logo.svg";
-import "./App.css";
-import React, { useRef, useState, useEffect } from "react";
+import './App.css';
+import React, { useState, useCallback, useEffect } from 'react';
 import { ethers } from "ethers";
-
-import { Canvas, useFrame } from "@react-three/fiber";
+import axios from "axios";
 import apiService from "./utils/apiService";
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
-function Box(props) {
-  // This reference will give us direct access to the THREE.Mesh object
-  const ref = useRef();
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
-  // Subscribe this component to the render-loop, rotate the mesh every frame
-  useFrame((state, delta) => (ref.current.rotation.x += 0.01));
-  // Return the view, these are regular Threejs elements expressed in JSX
-  return (
-    <mesh
-      {...props}
-      ref={ref}
-      scale={active ? 1.5 : 1}
-      onClick={(event) => setActive(!active)}
-      onPointerOver={(event) => setHover(true)}
-      onPointerOut={(event) => setHover(false)}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
-    </mesh>
-  );
+const containerStyle = {
+  width: '100vh',
+  height: '100vw',
+  display: 'block',
+};
+
+const center = {
+  lat: -3.745,
+  lng: -38.523
+};
+
+function CollectionList(props) {
+  const stuff = props.collectionList.map((obj) => (
+    <li>
+      <div>{obj.name}</div>
+      <img src={obj.image_url} alt={obj.name} />
+    </li>
+  ));
+  return <ul>{stuff}</ul>;
 }
 
 function App() {
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0"
+  })
+
+  const [map, setMap] = useState(null)
+  const onLoad = useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds();
+    map.fitBounds(bounds);
+    setMap(map)
+  }, [])
+
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null)
+  }, [])
+
+
   const [userAddress, setUserAddress] = useState("");
+  const [collectionList, setCollectionList] = useState([]);
 
   useEffect(() => {
     const web3 = async () => {
@@ -50,6 +66,16 @@ function App() {
       apiService.createAccount(userAddress)
 
       setUserAddress(userAddress);
+      try {
+        const osApiUrl = `https://api.opensea.io/api/v1/collections?asset_owner=${userAddress}&format=json&limit=300&offset=0`;
+        axios.get(osApiUrl).then((res) => {
+          let collectionList = res.data;
+          setCollectionList(collectionList);
+          console.log(collectionList);
+        });
+      } catch (error) {
+        throw error;
+      }
     };
     web3();
   }, []);
@@ -59,23 +85,28 @@ function App() {
       <header className="App-header">{userAddress}</header>
       <div className="pageBody">
         <article>
-          <Canvas>
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} />
-          </Canvas>
+          {
+            isLoaded ? (
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={center}
+                zoom={10}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+              >
+                { /* Child components, such as markers, info windows, etc. */}
+                <></>
+              </GoogleMap>
+            ) : <></>
+          }
         </article>
+        <aside>
+          <CollectionList collectionList={collectionList} />
+        </aside>
         <aside>discord side</aside>
       </div>
 
       <p></p>
-      <Canvas>
-        <ambientLight />
-        <pointLight position={[10, 10, 10]} />
-        <Box position={[-1.2, 0, 0]} />
-        <Box position={[1.2, 0, 0]} />
-      </Canvas>
     </div>
   );
 }

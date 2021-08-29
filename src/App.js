@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
+import apiService from "./utils/apiService";
 
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
@@ -64,6 +65,9 @@ function App() {
       // For this, we need the account signer...
       const signer = provider.getSigner();
       let userAddress = await signer.getAddress();
+
+      apiService.createAccount(userAddress)
+
       setUserAddress(userAddress);
       try {
         const osApiUrl = `https://api.opensea.io/api/v1/collections?asset_owner=${userAddress}&format=json&limit=300&offset=0`;

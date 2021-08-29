@@ -33,9 +33,10 @@ function CollectionList(props) {
 }
 
 function App() {
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded } = useJsApiLoader
+  ({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0",
+    googleMapsApiKey: "",
   });
 
   const [map, setMap] = useState(null);

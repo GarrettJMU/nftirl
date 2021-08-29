@@ -1,49 +1,47 @@
-import './App.css';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import "./App.css";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 
 const containerStyle = {
-  width: '100vh',
-  height: '100vw',
-  display: 'block',
+  width: "100vh",
+  height: "100vw",
+  display: "block",
 };
 
 const center = {
   lat: -3.745,
-  lng: -38.523
+  lng: -38.523,
 };
 
 function CollectionList(props) {
   const stuff = props.collectionList.map((obj) => (
     <li>
       <div>{obj.name}</div>
-      <img src={obj.image_url} alt={obj.name} />
+      <img src={obj.image_url} key={obj.slug} alt={obj.name} />
     </li>
   ));
   return <ul>{stuff}</ul>;
 }
 
 function App() {
-
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0"
-  })
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0",
+  });
 
-  const [map, setMap] = useState(null)
+  const [map, setMap] = useState(null);
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
-    setMap(map)
-  }, [])
+    setMap(map);
+  }, []);
 
   const onUnmount = useCallback(function callback(map) {
-    setMap(null)
-  }, [])
-
+    setMap(null);
+  }, []);
 
   const [userAddress, setUserAddress] = useState("");
   const [collectionList, setCollectionList] = useState([]);
@@ -81,25 +79,24 @@ function App() {
     <div className="App">
       <header className="App-header">{userAddress}</header>
       <div className="pageBody">
-        <article>
-          {
-            isLoaded ? (
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={center}
-                zoom={10}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
-              >
-                { /* Child components, such as markers, info windows, etc. */}
-                <></>
-              </GoogleMap>
-            ) : <></>
-          }
-        </article>
         <aside>
           <CollectionList collectionList={collectionList} />
         </aside>
+        <article>
+          {isLoaded ? (
+            <GoogleMap
+              mapContainerStyle={containerStyle}
+              center={center}
+              zoom={10}
+              onLoad={onLoad}
+              onUnmount={onUnmount}>
+              {/* Child components, such as markers, info windows, etc. */}
+              <></>
+            </GoogleMap>
+          ) : (
+            <></>
+          )}
+        </article>
         <aside>discord side</aside>
       </div>
 

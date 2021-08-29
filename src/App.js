@@ -33,11 +33,7 @@ function CollectionList(props) {
 }
 
 function App() {
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0",
-  });
-
+  const [search, setSearch] = useState("");
   const [map, setMap] = useState(null);
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
@@ -115,6 +111,8 @@ function App() {
             className="searchBar"
             type="text"
             placeholder="eg. Los Angeles, CA"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <input className="searchButton" type="submit" />
         </div>
@@ -137,7 +135,10 @@ function App() {
                     hexTopColor={d => weightColor(d.sumWeight)}
                     hexSideColor={d => weightColor(d.sumWeight)}
                     hexBinMerge={true}
-                    enablePointerInteraction={false}
+                    enablePointerInteraction={true}
+                    onGlobeClick={(event, point) => {
+                        console.log(point);
+                    }}
                 />
         </article>
         <aside>discord side</aside>

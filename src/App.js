@@ -1,7 +1,7 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React, { useRef, useState, useEffect } from "react";
 import { ethers } from "ethers";
+import axios from "axios";
 
 import { Canvas, useFrame } from "@react-three/fiber";
 
@@ -28,8 +28,18 @@ function Box(props) {
   );
 }
 
+function CollectionList(props) {
+  const stuff = props.collectionList.map((obj) => (
+    <li>
+      <div>{obj.name}</div>
+    </li>
+  ));
+  return <ul>{stuff}</ul>;
+}
+
 function App() {
   const [userAddress, setUserAddress] = useState("");
+  const [collectionList, setCollectionList] = useState([]);
 
   useEffect(() => {
     const web3 = async () => {
@@ -46,6 +56,16 @@ function App() {
       const signer = provider.getSigner();
       let userAddress = await signer.getAddress();
       setUserAddress(userAddress);
+      try {
+        const osApiUrl = `https://api.opensea.io/api/v1/collections?asset_owner=${userAddress}&format=json&limit=300&offset=0`;
+        axios.get(osApiUrl).then((res) => {
+          let collectionList = res.data;
+          setCollectionList(collectionList);
+          console.log(collectionList);
+        });
+      } catch (error) {
+        throw error;
+      }
     };
     web3();
   }, []);
@@ -62,6 +82,9 @@ function App() {
             <Box position={[1.2, 0, 0]} />
           </Canvas>
         </article>
+        <aside>
+          <CollectionList collectionList={collectionList} />
+        </aside>
         <aside>discord side</aside>
       </div>
 

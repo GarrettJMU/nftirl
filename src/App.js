@@ -1,6 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { ethers } from "ethers";
+import axios from "axios";
 
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 
@@ -15,7 +16,15 @@ const center = {
   lng: -38.523
 };
 
-
+function CollectionList(props) {
+  const stuff = props.collectionList.map((obj) => (
+    <li>
+      <div>{obj.name}</div>
+      <img src={obj.image_url} alt={obj.name} />
+    </li>
+  ));
+  return <ul>{stuff}</ul>;
+}
 
 function App() {
 
@@ -23,7 +32,7 @@ function App() {
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0"
   })
-  
+
   const [map, setMap] = useState(null)
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
@@ -35,11 +44,42 @@ function App() {
     setMap(null)
   }, [])
 
+
+  const [userAddress, setUserAddress] = useState("");
+  const [collectionList, setCollectionList] = useState([]);
+
+  useEffect(() => {
+    const web3 = async () => {
+      // If you don't specify a //url//, Ethers connects to the default
+      // (i.e. ``http:/\/localhost:8545``)
+      const provider = new ethers.providers.Web3Provider(
+        window.ethereum,
+        "any"
+      );
+      await provider.send("eth_requestAccounts", []);
+      // The provider also allows signing transactions to
+      // send ether and pay to change state within the blockchain.
+      // For this, we need the account signer...
+      const signer = provider.getSigner();
+      let userAddress = await signer.getAddress();
+      setUserAddress(userAddress);
+      try {
+        const osApiUrl = `https://api.opensea.io/api/v1/collections?asset_owner=${userAddress}&format=json&limit=300&offset=0`;
+        axios.get(osApiUrl).then((res) => {
+          let collectionList = res.data;
+          setCollectionList(collectionList);
+          console.log(collectionList);
+        });
+      } catch (error) {
+        throw error;
+      }
+    };
+    web3();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        asdf
-      </header>
+      <header className="App-header">{userAddress}</header>
       <div className="pageBody">
         <article>
           {
@@ -58,10 +98,12 @@ function App() {
           }
         </article>
         <aside>
-          <iframe src="https://discord.com/widget?id=789556424640430121&theme=dark" allowtransparency="true" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+          <CollectionList collectionList={collectionList} />
         </aside>
+        <aside>discord side</aside>
       </div>
 
+      <p></p>
     </div>
   );
 }

@@ -18,16 +18,14 @@ const center = {
 
 function CollectionList(props) {
   const stuff = props.collectionList.map((obj) => (
-    <div className="collectionContainer">
-      <img
-        className="collectionImage"
-        src={obj.image_url}
-        key={obj.slug}
-        alt={obj.name}
-      />
-    </div>
+    <img
+      className="collectionImage"
+      src={obj.image_url}
+      key={obj.slug}
+      alt={obj.name}
+    />
   ));
-  return <div>{stuff}</div>;
+  return <div className="collectionsContainer">{stuff}</div>;
 }
 
 function App() {
@@ -81,12 +79,28 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">{userAddress}</header>
+      <div className="navbar">
+        <button onclick={() => alert(1)} className="walletConnectButton">
+          WALLET CONNECT
+        </button>
+      </div>
+      <header className="App-header">
+        <h1>SEARCH LOCATION</h1>
+        <div className="searchDiv">
+          <input
+            className="searchBar"
+            type="text"
+            placeholder="eg. Los Angeles, CA"
+          />
+          <input className="searchButton" type="submit" />
+        </div>
+      </header>
+
       <div className="pageBody">
-        <aside>
+        <aside className="collections">
           <CollectionList collectionList={collectionList} />
         </aside>
-        <article>
+        {/* <article>
           {isLoaded ? (
             <GoogleMap
               mapContainerStyle={containerStyle}
@@ -94,14 +108,14 @@ function App() {
               zoom={10}
               onLoad={onLoad}
               onUnmount={onUnmount}>
-              {/* Child components, such as markers, info windows, etc. */}
               <></>
             </GoogleMap>
           ) : (
             <></>
           )}
-        </article>
-        <aside>discord side</aside>
+        </article> */}
+        {/* {userAddress}
+        <aside>discord side</aside> */}
       </div>
 
       <p></p>

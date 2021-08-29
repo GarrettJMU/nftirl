@@ -1,10 +1,9 @@
 .App {
-  text-align: center;
   color: white;
-  overflow: hidden;
 }
 body {
-  overflow: hidden;
+  background-color: black;
+  font-family: "Roboto", sans-serif;
 }
 .App-logo {
   height: 40vmin;
@@ -18,7 +17,6 @@ body {
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 10vh;
   display: flex;
   flex-direction: column;
@@ -48,6 +46,12 @@ aside .sidebar {
   overflow-x: hidden;
 }
 
+aside .collections {
+  width: auto;
+  justify-content: center;
+  border: 1px solid blue;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -61,13 +65,71 @@ aside .sidebar {
   }
 }
 
-.collectionContainer {
+.collectionsContainer {
   display: flex;
   flex-direction: row;
   width: 300px;
+  flex-wrap: wrap;
 }
 
 .collectionImage {
-  height: 100px;
+  height: 90px;
+  width: 90px;
+  border-radius: 80px;
+  margin: 3px;
+  border: 1px solid white;
+}
+
+.navbar {
+  display: "flex";
+  width: auto;
+  flex-direction: "row";
+  justify-content: "end";
+}
+
+.walletConnectButton {
+  display: "flex";
+
+  background-color: white;
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  width: 205px;
+  height: 47px;
+  border-radius: 24px;
+  border: 0px;
+}
+
+.searchDiv {
+  display: "flex";
+}
+
+.searchBar {
+  border: 0px;
+  width: 800px;
+  height: 38px;
+  border-radius: 25px;
+  color: "white";
+  padding-left: 25px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.searchButton {
   width: 100px;
+  height: 38px;
+  border-radius: 25px;
+  border: 0px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+}
+
+input[type="text"],
+textarea {
+  background-color: "#ff0000";
+}
+
+input:focus {
+  outline: none;
 }

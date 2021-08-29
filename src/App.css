@@ -1,8 +1,11 @@
 .App {
   text-align: center;
   color: white;
+  overflow: hidden;
 }
-
+body {
+  overflow: hidden;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -16,7 +19,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 20vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,13 +32,22 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}e
+.article {
+  width: auto;
+}
+aside .sidebar {
+  height: 100%;
+  width: 350px;
+  position: absolute;
+  display: block;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #111;
+  overflow-x: hidden;
 }
 
-aside {
-  background-color: #282c34;
-  height: 80vh;
-  font-size: large;
-}
 
 .App-link {
   color: #61dafb;

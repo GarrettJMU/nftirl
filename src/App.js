@@ -1,34 +1,40 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
+
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+
+const containerStyle = {
+  width: '100vh',
+  height: '100vw',
+  display: 'block',
+};
+
+const center = {
+  lat: -3.745,
+  lng: -38.523
+};
 
 
-import { Canvas, useFrame } from '@react-three/fiber'
-
-function Box(props) {
-  // This reference will give us direct access to the THREE.Mesh object
-  const ref = useRef()
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false)
-  const [active, setActive] = useState(false)
-  // Subscribe this component to the render-loop, rotate the mesh every frame
-  useFrame((state, delta) => (ref.current.rotation.x += 0.01))
-  // Return the view, these are regular Threejs elements expressed in JSX
-  return (
-    <mesh
-      {...props}
-      ref={ref}
-      scale={active ? 1.5 : 1}
-      onClick={(event) => setActive(!active)}
-      onPointerOver={(event) => setHover(true)}
-      onPointerOut={(event) => setHover(false)}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
-  )
-}
 
 function App() {
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0"
+  })
+  
+  const [map, setMap] = useState(null)
+  const onLoad = useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds();
+    map.fitBounds(bounds);
+    setMap(map)
+  }, [])
+
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null)
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
@@ -36,15 +42,23 @@ function App() {
       </header>
       <div className="pageBody">
         <article>
-          <Canvas>
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} />
-          </Canvas>
+          {
+            isLoaded ? (
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={center}
+                zoom={10}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+              >
+                { /* Child components, such as markers, info windows, etc. */}
+                <></>
+              </GoogleMap>
+            ) : <></>
+          }
         </article>
         <aside>
-          discord side
+          <iframe src="https://discord.com/widget?id=789556424640430121&theme=dark" allowtransparency="true" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
         </aside>
       </div>
 

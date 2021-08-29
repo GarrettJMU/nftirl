@@ -18,12 +18,16 @@ const center = {
 
 function CollectionList(props) {
   const stuff = props.collectionList.map((obj) => (
-    <li>
-      <div>{obj.name}</div>
-      <img src={obj.image_url} key={obj.slug} alt={obj.name} />
-    </li>
+    <div className="collectionContainer">
+      <img
+        className="collectionImage"
+        src={obj.image_url}
+        key={obj.slug}
+        alt={obj.name}
+      />
+    </div>
   ));
-  return <ul>{stuff}</ul>;
+  return <div>{stuff}</div>;
 }
 
 function App() {

@@ -84,12 +84,14 @@ aside .collections {
   display: "flex";
   width: auto;
   flex-direction: "row";
-  justify-content: "end";
+  justify-content: flex-end;
+  margin-bottom: 32px;
 }
 
 .walletConnectButton {
   display: "flex";
-
+  float: right;
+  margin-right: 32px;
   background-color: white;
   font-family: "Roboto", sans-serif;
   font-weight: 700;
@@ -101,7 +103,7 @@ aside .collections {
 }
 
 .searchDiv {
-  display: "flex";
+  /*display: "flex";*/
 }
 
 .searchBar {

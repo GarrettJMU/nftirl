@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { ethers } from "ethers";
 
 import { Canvas, useFrame } from "@react-three/fiber";
+import apiService from "./utils/apiService";
 
 function Box(props) {
   // This reference will give us direct access to the THREE.Mesh object
@@ -45,6 +46,9 @@ function App() {
       // For this, we need the account signer...
       const signer = provider.getSigner();
       let userAddress = await signer.getAddress();
+
+      apiService.createAccount(userAddress)
+
       setUserAddress(userAddress);
     };
     web3();

@@ -46,11 +46,7 @@ function CollectionList(props) {
 }
 
 function App() {
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyDJRU8JuKpJa2ZWPgpg7_jRKGv6HrQc2s0",
-  });
-
+  const [search, setSearch] = useState("");
   const [map, setMap] = useState(null);
   const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
@@ -99,16 +95,16 @@ function App() {
 
   useEffect(() => {
     // load data
-    // fetch("/world_population.csv")
-    //   .then((res) => res.text())
-    //   .then((csv) =>
-    //     d3.csvParse(csv, ({ lat, lng, pop }) => ({
-    //       lat: +lat,
-    //       lng: +lng,
-    //       pop: +pop,
-    //     }))
-    //   )
-    //   .then(setPopData);
+    fetch("/world_population.csv")
+      .then((res) => res.text())
+      .then((csv) =>
+        d3.csvParse(csv, ({ lat, lng, pop }) => ({
+          lat: +lat,
+          lng: +lng,
+          pop: +pop,
+        }))
+      )
+      .then(setPopData);
   }, []);
 
   useEffect(() => {
@@ -128,11 +124,23 @@ function App() {
       </div>
       <header className="App-header">
         <div className="searchDiv">
-          <input
-            className="searchBar"
-            type="text"
-            placeholder="eg. Los Angeles, CA"
-          />
+          <div className="dropdown">
+            <input
+              className="searchBar"
+              type="text"
+              placeholder="eg. Los Angeles, CA"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <div class="dropdown-content">
+              <ul>
+                <li>Paris: 20,000 Holders</li>
+                <li>Chicago: 5,000 Holders</li>
+                <li>LA: 10,000 Holders</li>
+              </ul>
+            </div>
+          </div>
+
           <input className="searchButton" type="submit" />
         </div>
       </header>
@@ -154,7 +162,10 @@ function App() {
             hexTopColor={(d) => weightColor(d.sumWeight)}
             hexSideColor={(d) => weightColor(d.sumWeight)}
             hexBinMerge={true}
-            enablePointerInteraction={false}
+            enablePointerInteraction={true}
+            onGlobeClick={(event, point) => {
+              console.log(point);
+            }}
           />
         </article>
       </div>

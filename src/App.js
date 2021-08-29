@@ -3,7 +3,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { ethers } from "ethers";
 import axios from "axios";
 
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100vh',
@@ -12,8 +12,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: -3.745,
-  lng: -38.523
+  lat: 42.360081,
+  lng: -71.058884
 };
 
 function CollectionList(props) {
@@ -77,6 +77,8 @@ function App() {
     web3();
   }, []);
 
+ 
+
   return (
     <div className="App">
       <header className="App-header">{userAddress}</header>
@@ -91,7 +93,7 @@ function App() {
                 onLoad={onLoad}
                 onUnmount={onUnmount}
               >
-                { /* Child components, such as markers, info windows, etc. */}
+                <Marker position={center} imagePath="http://placekitten.com/200/300"/>
                 <></>
               </GoogleMap>
             ) : <></>

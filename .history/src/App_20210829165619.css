@@ -1,6 +1,5 @@
 .App {
   text-align: center;
-  color: white;
 }
 
 .App-logo {
@@ -27,14 +26,11 @@
 
 .pageBody {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
 }
 
 aside {
-  background-color: #282c34;
-  height: 80vh;
-  font-size: large;
+
 }
 
 .App-link {

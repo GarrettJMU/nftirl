@@ -32,6 +32,7 @@ function CollectionList(props) {
   const stuff = props.collectionList.map((obj) => (
     <li>
       <div>{obj.name}</div>
+      <img src={obj.image_url} alt={obj.name} />
     </li>
   ));
   return <ul>{stuff}</ul>;
